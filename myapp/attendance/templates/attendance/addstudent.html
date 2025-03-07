@@ -9,8 +9,12 @@
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-3">
+                <label for="roll_no" class="form-label">Roll No</label>
+                <input type="text" class="form-control" id="roll_no" name="roll_no" placeholder="Enter Roll No" >
+            </div>
+            <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" >
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
@@ -18,11 +22,11 @@
             </div>
             <div class="mb-3">
                 <label for="parent_phone" class="form-label">Parent Phone</label>
-                <input type="number" class="form-control" id="parent_phone" name="parent_phone" placeholder="Enter Parent Phone" required>
+                <input type="number" class="form-control" id="parent_phone" name="parent_phone" placeholder="Enter Parent Phone" >
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Upload Image</label>
-                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" >
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

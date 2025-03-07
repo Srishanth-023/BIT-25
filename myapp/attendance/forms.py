@@ -28,9 +28,10 @@ class StudentForm(forms.ModelForm):
     name = forms.CharField(required=True)
     email = forms.EmailField( required=False)
     parent_phone = forms.IntegerField(required=True)
+    roll_no = forms.CharField(required=True)
     class Meta:
         model = Student
-        fields = ['name', 'email', 'parent_phone',]
+        fields = ['name', 'email', 'parent_phone','roll_no']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Name'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter Email'}),

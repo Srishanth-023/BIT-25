@@ -16,7 +16,7 @@ class Student(models.Model):
     parent_phone = models.CharField(max_length=15, null=True, blank=True)
     assigned_class = models.ForeignKey(Class, on_delete=models.CASCADE)  
     created_at = models.DateTimeField(auto_now_add=True)
-
+    roll_no = models.CharField(unique=True,max_length=8,null=False)
     def __str__(self):
         return f"{self.name} - {self.assigned_class.name}"
 
@@ -25,15 +25,14 @@ class Attendance(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     date = models.DateField()  
 
-    period_1 = models.BooleanField(default=True)  
-    period_2 = models.BooleanField(default=True)
-    period_3 = models.BooleanField(default=True)
-    period_4 = models.BooleanField(default=True)
-    period_5 = models.BooleanField(default=True)
-    period_6 = models.BooleanField(default=True)
-    period_7 = models.BooleanField(default=True)
-    period_8 = models.BooleanField(default=True)
-
+    period_1 = models.BooleanField(default=False)  
+    period_2 = models.BooleanField(default=False)
+    period_3 = models.BooleanField(default=False)
+    period_4 = models.BooleanField(default=False)
+    period_5 = models.BooleanField(default=False)
+    period_6 = models.BooleanField(default=False)
+    period_7 = models.BooleanField(default=False)
+    period_8 = models.BooleanField(default=False)
     class Meta:
         unique_together = ('student', 'date') 
 
