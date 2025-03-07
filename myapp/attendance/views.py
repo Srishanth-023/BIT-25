@@ -1,15 +1,25 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse,reverse_lazy
+from django.http.response import HttpResponse
 from django.contrib.auth import login,logout
 from django.contrib.auth.decorators import login_required
-from . forms import LoginForm,StudentForm,StudentImageForm
+from . forms import LoginForm,StudentForm,StudentImageForm,NewClassForm
 from django.contrib.auth import authenticate
-from .models import Class,Student,StudentImage
-import os
+from .models import Attendance, Class,Student,StudentImage
+from django.contrib.auth.models import User
 import random
 import io
 from PIL import Image, ImageEnhance, ImageFilter
 from django.core.files.base import ContentFile
+import cv2
+import face_recognition
+import os
+import numpy as np
+import mediapipe as mp
+import torch
+from torchvision import transforms
+from PIL import Image
+from django.utils.timezone import now
 # Create your views here.
 
 
@@ -78,13 +88,113 @@ def add_student(request):
                     transformed_image.save(img_io, format="JPEG")
                     img_io.seek(0)
 
-                    StudentImage.objects.create(
-                        student=student,
-                        image=ContentFile(img_io.getvalue(), name=f"{student.name}_{i+1}.jpg")
+                    StudentImage.objects.create(student=student,image=ContentFile(img_io.getvalue(), name=f"{student.name}_{i+1}.jpg")
                     )
 
                 print(f"Saved 100 distorted images for {student.name}")
+    return render(request,'attendance/addstudent.html',{'title':'Add student','student_form':student_form,'image_form':image_form}) 
 
 
+def new_class(request):
+    incharges = User.objects.exclude(username=request.user)
+    form = NewClassForm()
+    if request.method == 'POST':
+        form = NewClassForm(request.POST)
+        if form.is_valid():
+            form.save()
+    return render(request,"attendance/addclass.html",{'incharges':incharges,'title':'New Class','form':form})
 
-    return render(request,'attendance/addstudent.html',{'title':'Add student'}) 
+
+def take_attendance(request):
+    mp_face_mesh = mp.solutions.face_mesh
+    face_mesh = mp_face_mesh.FaceMesh(
+        static_image_mode=False,
+        max_num_faces=100,
+        refine_landmarks=True,
+        min_detection_confidence=0.8,
+        min_tracking_confidence=0.8
+    )
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    midas = torch.hub.load("intel-isl/MiDaS", "MiDaS_small", trust_repo=True).to(device).eval()
+
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((384, 384)),
+        transforms.Normalize(mean=[0.5], std=[0.5])
+    ])
+
+    students = Student.objects.filter(assigned_class__incharge=request.user)
+    student_images = StudentImage.objects.filter(student__in=students)
+    
+    known_face_encodings = []
+    known_face_names = []
+
+    for student_image in student_images:
+        try:
+            image = face_recognition.load_image_file(student_image.image.path)
+            encoding = face_recognition.face_encodings(image, model="hog", num_jitters=10)
+            if encoding:
+                known_face_encodings.append(encoding[0])
+                known_face_names.append(student_image.student.name)
+        except Exception:
+            pass
+
+    if not known_face_encodings:
+        return HttpResponse("No student face data found. Please add student images.", status=400)
+
+    cap = cv2.VideoCapture(0)
+    frame_count = 0
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        frame_count += 1
+        if frame_count % 3 != 0:
+            continue
+
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        face_locations = face_recognition.face_locations(rgb_frame, model="hog")
+        face_encodings = face_recognition.face_encodings(rgb_frame, face_locations, num_jitters=2)
+        
+        results = face_mesh.process(rgb_frame) if len(face_locations) > 0 else None
+        
+        for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+            matches = face_recognition.compare_faces(known_face_encodings, face_encoding, tolerance=0.4)
+            face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+            best_match_index = np.argmin(face_distances) if len(face_distances) > 0 else -1
+            name = "Unmatched"
+
+            if best_match_index != -1 and matches[best_match_index] and face_distances[best_match_index] < 0.5:
+                name = known_face_names[best_match_index]
+            
+            student = Student.objects.filter(name=name).first()
+            if student:
+                attendance, created = Attendance.objects.get_or_create(student=student, date=now().date())
+                attendance.period_1 = True
+                attendance.period_2 = True
+                attendance.period_3 = True
+                attendance.period_4 = True
+                attendance.period_5 = True
+                attendance.period_6 = True
+                attendance.period_7 = True
+                attendance.period_8 = True
+                attendance.save()
+                print(f"Attendance marked for {name}: Present")
+            else:
+                print(f"Student {name} not found in database. Skipping attendance update.")
+            
+            color = (0, 255, 0) if name != "Unmatched" else (0, 0, 255)
+            cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
+            cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2, cv2.LINE_AA)
+
+        cv2.imshow("Face Recognition Attendance System", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+    return redirect(reverse("attendance:index"))
+

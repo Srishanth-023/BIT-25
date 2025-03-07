@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Class(models.Model):
     name = models.CharField(max_length=50, unique=True) 
-    incharge = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    incharge = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)#
 
     def __str__(self):
         return f"{self.name} (Incharge: {self.incharge.username if self.incharge else 'None'})"
