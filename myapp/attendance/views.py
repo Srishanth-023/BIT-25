@@ -112,6 +112,7 @@ def new_class(request):
     else:
         messages.warning(request,"You don't have permission to do this action.")
         return redirect(reverse("attendance:index"))
+    
 
 @login_required(login_url=reverse_lazy('attendance:login'))
 def take_attendance(request):
@@ -138,9 +139,12 @@ def take_attendance(request):
     
     known_face_encodings = []
     known_face_names = []
+    count = 1
     for student_image in student_images:
         
         try:
+            count+=1
+            print(count)
             image = face_recognition.load_image_file(student_image.image)
             encoding = face_recognition.face_encodings(image, model="hog", num_jitters=10)
             

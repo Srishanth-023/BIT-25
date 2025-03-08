@@ -1,9 +1,50 @@
 {% extends "attendance/includes/base.html" %}
 {% load static %}
 
+{% block style %}
+<link rel="stylesheet" href="{% static 'attendance/addstudent.css' %}">
+<style>
+    .full-page {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .square-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        width: 70vw;
+        height: 70vh;
+    }
+    .square-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 2rem;
+        font-weight: bold;
+        color: blanchedalmond;
+        text-align: center;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .square-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+</style>
+{% endblock style %}
+
 {% block body %}
-
 {% include "attendance/includes/messages.html" %}
-
+<div class="fixed-top">{% include "attendance/includes/navbar.html" %}</div>
+<div class="container full-page">
+    <div class="square-container">
+        <a href="{% url 'attendance:takeattendance' %}" class="square-btn">Take Attendance</a>
+        <a href="{% url 'attendance:addstudent' %}" class="square-btn">Add Student</a>
+    </div>
+</div>
 {% endblock body %}
-

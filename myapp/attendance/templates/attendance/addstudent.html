@@ -7,8 +7,11 @@
 
 {% block body %}
 
+
 <div class="container mt-5 d-flex justify-content-center align-items-center min-vh-100">
+    <div class="fixed-top">{% include "attendance/includes/navbar.html" %}</div>
     <div class="card p-4 shadow-lg custom-card">
+        
         <h2 class="mb-4 text-center text-white">Student Registration</h2>
 
         {% if student_form.non_field_errors %}

@@ -9,8 +9,11 @@
 {% block body %}
 
 <div class="d-flex justify-content-center align-items-center vh-100">
+    
     {% include "attendance/includes/messages.html" %}
+    <div class="fixed-top">{% include "attendance/includes/navbar.html" %}</div>
     <div class="custom-card text-center">
+        
         <h2 class="mb-4 text-white">Create New Class</h2>
 
         {% if form.non_field_errors %}

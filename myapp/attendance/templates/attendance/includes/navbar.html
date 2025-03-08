@@ -1,0 +1,59 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+    <div class="container">
+        <a class="navbar-brand" href="#">Findout</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item me-3">
+                    <a class="nav-link btn-glow px-4 py-2" href="">Home</a>
+                </li>
+                <li class="nav-item me-3">
+                    <a class="nav-link btn-glow px-4 py-2" href="">Logout</a>
+                </li>
+                {% if request.user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link btn-glow px-4 py-2" href="">Add Class</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .custom-navbar {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 15px 0;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .navbar-brand {
+        font-weight: bold;
+        font-size: 1.8rem;
+        color: #fff !important;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-glow {
+        background: linear-gradient(45deg, #ff4b2b, #ff416c);
+        border: none;
+        color: #fff !important;
+        font-weight: bold;
+        border-radius: 10px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-glow:hover {
+        background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+
+    .nav-item {
+        margin-right: 10px;
+    }
+</style>
