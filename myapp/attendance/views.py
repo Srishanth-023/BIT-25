@@ -139,12 +139,12 @@ def take_attendance(request):
     
     known_face_encodings = []
     known_face_names = []
-    count = 1
+    # count = 1
     for student_image in student_images:
         
         try:
-            count+=1
-            print(count)
+            # count+=1
+            # print(count)
             image = face_recognition.load_image_file(student_image.image)
             encoding = face_recognition.face_encodings(image, model="hog", num_jitters=10)
             
@@ -235,7 +235,7 @@ def show_attendance(request):
         print(student.attendance)
         classname = student.assigned_class
      
-    return render(request,'attendance/showattendance.html',{"students":students,'date':today,'classname':classname})
+    return render(request,'attendance/showattendance.html',{"students":students,'today':today,'classname':classname})
 
 def logout_view(request):
     logout(request)
