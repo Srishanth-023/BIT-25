@@ -1,0 +1,44 @@
+{% if messages %}
+<div class="modal fade show" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true" style="display: block;">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    <div class="modal-header text-white" style="background-color: #28a745;">
+                        <h4 class="modal-title w-100 text-center">Success</h4>
+                {% elif message.tags == "error" %}
+                    <div class="modal-header text-white" style="background-color: #dc3545;">
+                        <h4 class="modal-title w-100 text-center">Error</h4>
+                {% elif message.tags == "warning" %}
+                    <div class="modal-header text-white" style="background-color: #ffc107;">
+                        <h4 class="modal-title w-100 text-center">Warning</h4>
+                {% elif message.tags == "info" %}
+                    <div class="modal-header text-white" style="background-color: #17a2b8;">
+                        <h4 class="modal-title w-100 text-center">Information</h4>
+                {% endif %}
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center p-4">
+                        <p class="fs-4 fw-bold text-dark">{{ message }}</p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-lg text-white" 
+                            {% if message.tags == "success" %} style="background-color: #218838;"
+                            {% elif message.tags == "error" %} style="background-color: #c82333;"
+                            {% elif message.tags == "warning" %} style="background-color: #e0a800;"
+                            {% elif message.tags == "info" %} style="background-color: #138496;"
+                            {% endif %}
+                            data-bs-dismiss="modal">OK</button>
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var messageModal = new bootstrap.Modal(document.getElementById("messageModal"));
+        messageModal.show();
+    });
+</script>
+{% endif %}

@@ -2,17 +2,14 @@
 {% load static %}
 
 {% block style %}
-
-
+<link rel="stylesheet" href="{% static 'attendance/addstudent.css' %}">
 {% endblock style %}
-
-
 
 {% block body %}
 
-<div class="container mt-5">
-    <div class="card p-4 shadow">
-        <h2 class="mb-4">Student Registration</h2>
+<div class="container mt-5 d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card p-4 shadow-lg custom-card">
+        <h2 class="mb-4 text-center text-white">Student Registration</h2>
 
         {% if student_form.non_field_errors %}
             <div class="alert alert-danger">
@@ -21,13 +18,12 @@
                 {% endfor %}
             </div>
         {% endif %}
-        
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="mb-3">
-                <label for="roll_no" class="form-label">Roll No</label>
-                <input type="text" class="form-control" id="roll_no" name="roll_no" placeholder="Enter Roll No" value="{{ student_form.roll_no.value|default:'' }}">
+                <label for="roll_no" class="form-label text-white">Roll No</label>
+                <input type="text" class="form-control glass-input" id="roll_no" name="roll_no" placeholder="Enter Roll No" value="{{ student_form.roll_no.value|default:'' }}">
                 {% if student_form.roll_no.errors %}
                     {% for error in student_form.roll_no.errors %}
                         <p class="text-danger">{{ error }}</p>
@@ -36,8 +32,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="{{ student_form.name.value|default:'' }}">
+                <label for="name" class="form-label text-white">Name</label>
+                <input type="text" class="form-control glass-input" id="name" name="name" placeholder="Enter Name" value="{{ student_form.name.value|default:'' }}">
                 {% if student_form.name.errors %}
                     {% for error in student_form.name.errors %}
                         <p class="text-danger">{{ error }}</p>
@@ -46,8 +42,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" value="{{ student_form.email.value|default:'' }}">
+                <label for="email" class="form-label text-white">Email</label>
+                <input type="email" class="form-control glass-input" id="email" name="email" placeholder="Enter Email" value="{{ student_form.email.value|default:'' }}">
                 {% if student_form.email.errors %}
                     {% for error in student_form.email.errors %}
                         <p class="text-danger">{{ error }}</p>
@@ -56,8 +52,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="parent_phone" class="form-label">Parent Phone</label>
-                <input type="number" class="form-control" id="parent_phone" name="parent_phone" placeholder="Enter Parent Phone" value="{{ student_form.parent_phone.value|default:'' }}">
+                <label for="parent_phone" class="form-label text-white">Parent Phone</label>
+                <input type="number" class="form-control glass-input" id="parent_phone" name="parent_phone" placeholder="Enter Parent Phone" value="{{ student_form.parent_phone.value|default:'' }}">
                 {% if student_form.parent_phone.errors %}
                     {% for error in student_form.parent_phone.errors %}
                         <p class="text-danger">{{ error }}</p>
@@ -66,8 +62,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="image" class="form-label">Upload Image</label>
-                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                <label for="image" class="form-label text-white">Upload Image</label>
+                <input type="file" class="form-control glass-input" id="image" name="image" accept="image/*">
                 {% if student_form.image.errors %}
                     {% for error in student_form.image.errors %}
                         <p class="text-danger">{{ error }}</p>
@@ -75,11 +71,11 @@
                 {% endif %}
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-glow w-100">Submit</button>
         </form>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
 
 {% endblock body %}

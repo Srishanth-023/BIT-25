@@ -12,6 +12,7 @@ import io
 from PIL import Image, ImageEnhance, ImageFilter
 from django.core.files.base import ContentFile
 from datetime import date
+from django.contrib import messages
 
 import cv2
 import face_recognition
@@ -102,6 +103,7 @@ def new_class(request):
         form = NewClassForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request,'New class has been added')
     return render(request,"attendance/addclass.html",{'incharges':incharges,'title':'New Class','form':form})
 
 
@@ -198,7 +200,8 @@ def take_attendance(request):
 
     cap.release()
     cv2.destroyAllWindows()
-    return redirect(reverse("attendance:index"))
+    messages.success(request,"Attendance has been taken successfully.")
+    return redirect(reverse("attendance:showattendance"))
 
 
 def show_attendance(request):

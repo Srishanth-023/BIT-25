@@ -1,11 +1,16 @@
 {% extends "attendance/includes/base.html" %}
 {% load static %}
 
+{% block style %}
+<link rel="stylesheet" href="{% static 'attendance/addstudent.css' %}">
+
+{% endblock style %}
+
 {% block body %}
 
-<div class="container mt-5">
-    <div class="card p-4 shadow">
-        <h2 class="mb-4">Create New Class</h2>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="custom-card text-center">
+        <h2 class="mb-4 text-white">Create New Class</h2>
 
         {% if form.non_field_errors %}
             <div class="alert alert-danger">
@@ -14,13 +19,14 @@
                 {% endfor %}
             </div>
         {% endif %}
+        {% include "attendance/includes/messages.html" %}
 
         <form method="POST">
             {% csrf_token %}
 
-            <div class="mb-3">
-                <label for="name" class="form-label">Class Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Class Name" value="{{ form.name.value|default:'' }}">
+            <div class="mb-3 text-start">
+                <label for="name" class="form-label text-white">Class Name</label>
+                <input type="text" class="form-control glass-input" id="name" name="name" placeholder="Enter Class Name" value="{{ form.name.value|default:'' }}">
                 {% if form.name.errors %}
                     {% for error in form.name.errors %}
                         <p class="text-danger">{{ error }}</p>
@@ -28,9 +34,9 @@
                 {% endif %}
             </div>
 
-            <div class="mb-3">
-                <label for="incharge" class="form-label">Incharge</label>
-                <select class="form-control" id="incharge" name="incharge">
+            <div class="mb-3 text-start">
+                <label for="incharge" class="form-label text-white">Incharge</label>
+                <select class="form-control glass-input" id="incharge" name="incharge">
                     <option value="">Select Incharge</option>
                     {% for incharge in incharges %}
                         <option value="{{incharge.id}}">
@@ -45,7 +51,7 @@
                 {% endif %}
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-glow">Submit</button>
         </form>
     </div>
 </div>

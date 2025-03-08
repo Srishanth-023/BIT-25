@@ -1,0 +1,82 @@
+@keyframes cornerGlow {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+}
+
+@keyframes card-glow {
+    0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+    100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+}
+
+body {
+    background: radial-gradient(circle at top left, #000000, transparent),
+                radial-gradient(circle at top right, #ff2600, transparent),
+                radial-gradient(circle at bottom left, #a200ff, transparent),
+                radial-gradient(circle at bottom right, #ffffff, transparent);
+    background-size: 200% 200%;
+    animation: cornerGlow 6s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.custom-card {
+    width: 800px;
+    max-width: 90%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out;
+    animation: card-glow 2s infinite alternate;
+    padding: 30px;
+}
+
+.custom-card:hover {
+    transform: scale(1.05);
+}
+
+.text-white {
+    color: #000000 !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    font-weight: 800;
+}
+
+.glass-input {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    backdrop-filter: blur(5px);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.glass-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.glass-input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    outline: none;
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.btn-glow {
+    background: #000000;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.btn-glow:hover {
+    background: #ff4b2b;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+}
