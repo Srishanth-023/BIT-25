@@ -10,4 +10,5 @@ urlpatterns = [
     path('addclass/',views.new_class,name="addclass"),
     path('takeattendance/',views.take_attendance,name="takeattendance"),
     path('attendance/',views.show_attendance,name="showattendance"),
+    path("logout/",views.logout_view,name="logout"),
 ]

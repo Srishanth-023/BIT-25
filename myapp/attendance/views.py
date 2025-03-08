@@ -13,7 +13,8 @@ from PIL import Image, ImageEnhance, ImageFilter
 from django.core.files.base import ContentFile
 from datetime import date
 from django.contrib import messages
-
+from datetime import datetime
+from django.utils.timezone import localtime
 import cv2
 import face_recognition
 import numpy as np
@@ -91,22 +92,28 @@ def add_student(request):
 
                     StudentImage.objects.create(student=student, image=ContentFile(img_io.getvalue(), name=f"{student.name}_{i+1}.jpg"))
 
-                print(f"Saved 10 distorted images for {student.name}")
+                messages.success(request,"Student added successfully.")
+                return redirect(reverse("attendance:index"))
+
     return render(request, 'attendance/addstudent.html', {'title': 'Add student', 'student_form': student_form, 'image_form': image_form})
 
 
-
+@login_required(login_url=reverse_lazy('attendance:login'))
 def new_class(request):
-    incharges = User.objects.exclude(username=request.user)
-    form = NewClassForm()
-    if request.method == 'POST':
-        form = NewClassForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request,'New class has been added')
-    return render(request,"attendance/addclass.html",{'incharges':incharges,'title':'New Class','form':form})
+    if request.user.is_superuser:
+        incharges = User.objects.exclude(username=request.user)
+        form = NewClassForm()
+        if request.method == 'POST':
+            form = NewClassForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request,'New class has been added')
+        return render(request,"attendance/addclass.html",{'incharges':incharges,'title':'New Class','form':form})
+    else:
+        messages.warning(request,"You don't have permission to do this action.")
+        return redirect(reverse("attendance:index"))
 
-
+@login_required(login_url=reverse_lazy('attendance:login'))
 def take_attendance(request):
     mp_face_mesh = mp.solutions.face_mesh
     face_mesh = mp_face_mesh.FaceMesh(
@@ -176,15 +183,26 @@ def take_attendance(request):
             
             student = Student.objects.filter(name=name).first()
             if student:
+                current_time = localtime().time()
+
                 attendance, created = Attendance.objects.get_or_create(student=student, date=now().date())
-                attendance.period_1 = True
-                attendance.period_2 = True
-                attendance.period_3 = True
-                attendance.period_4 = True
-                attendance.period_5 = True
-                attendance.period_6 = True
-                attendance.period_7 = True
-                attendance.period_8 = True
+                if datetime.strptime("08:45", "%H:%M").time() <= current_time <= datetime.strptime("09:40", "%H:%M").time():
+                    attendance.period_1 = True
+                elif datetime.strptime("09:40", "%H:%M").time() <= current_time <= datetime.strptime("10:35", "%H:%M").time():
+                    attendance.period_2 = True
+                elif datetime.strptime("10:50", "%H:%M").time() <= current_time <= datetime.strptime("11:40", "%H:%M").time():
+                    attendance.period_3 = True
+                elif datetime.strptime("11:40", "%H:%M").time() <= current_time <= datetime.strptime("12:25", "%H:%M").time():
+                    attendance.period_4 = True
+                elif datetime.strptime("13:25", "%H:%M").time() <= current_time <= datetime.strptime("14:10", "%H:%M").time():
+                    attendance.period_5 = True
+                elif datetime.strptime("14:10", "%H:%M").time() <= current_time <= datetime.strptime("14:55", "%H:%M").time():
+                    attendance.period_6 = True
+                elif datetime.strptime("15:10", "%H:%M").time() <= current_time <= datetime.strptime("15:50", "%H:%M").time():
+                    attendance.period_7 = True
+                else:
+                    attendance.period_8 = True
+
                 attendance.save()
                 print(f"Attendance marked for {name}: Present")
             else:
@@ -203,12 +221,18 @@ def take_attendance(request):
     messages.success(request,"Attendance has been taken successfully.")
     return redirect(reverse("attendance:showattendance"))
 
-
+@login_required(login_url=reverse_lazy('attendance:login'))
 def show_attendance(request):
     students = Student.objects.filter(assigned_class__incharge=request.user)
     today = date.today()
-    attended_students = Attendance.objects.filter(student__assigned_class__incharge=request.user)
     
     for student in students:
         student.attendance = Attendance.objects.filter(student=student, date=today).first()
-    return render(request,'attendance/showattendance.html',{"students":students,'date':today,'attended_students':attended_students})
+        print(student.attendance)
+        classname = student.assigned_class
+     
+    return render(request,'attendance/showattendance.html',{"students":students,'date':today,'classname':classname})
+
+def logout_view(request):
+    logout(request)
+    return redirect("attendance:index")

@@ -71,14 +71,14 @@
     <div class="header-container">
         Attendance Tracking System
     </div>
-
+    {% include "attendance/includes/messages.html" %}
     <!-- Transparent Background Box -->
     <div class="container-bg">
         
         <!-- Date and Class details -->
         <div class="info-container">
             <div>Date: <span id="currentDate"></span></div>
-            <div>Class: Ai & DS A</div>
+            <div>Class: {{classname}}</div>
         </div>
         
         <hr>
@@ -103,34 +103,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for student in attended_students %}
+                    {% for student in students %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ student.student.name }}</td>
-                        <td>{{ student.student.roll_no }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.roll_no }}</td>
 
-                        <td class="{% if student.period_1 %}present{% else %}absent{% endif %}">
-                            {% if student.period_1 %}P{% else %}A{% endif %}
+                        <td class="{% if student.attendance.period_1 %}present{% else %}absent{% endif %}">
+                            {% if student.attedance.period_1 %}P{% else %}A{% endif %}
                         </td>
-                        <td class="{% if student.period_2 %}present{% else %}absent{% endif %}">
+                        <td class="{% if student.attendance.period_2 %}present{% else %}absent{% endif %}">
                             {% if student.attendance.period_2 %}P{% else %}A{% endif %}
                         </td>
-                        <td class="{% if student.period_3 %}present{% else %}absent{% endif %}">
+                        <td class="{% if student.attendance.period_3 %}present{% else %}absent{% endif %}">
                             {% if student.attendance.period_3 %}P{% else %}A{% endif %}
                         </td>
-                        <td class="{% if student.period_4 %}present{% else %}absent{% endif %}">
+                        <td class="{% if student.attendance.period_4 %}present{% else %}absent{% endif %}">
                             {% if student.attendance.period_4 %}P{% else %}A{% endif %}
                         </td>
-                        <td class="{% if student.period_5 %}present{% else %}absent{% endif %}">
+                        <td class="{% if student.attendance.period_5 %}present{% else %}absent{% endif %}">
                             {% if student.attendance.period_5 %}P{% else %}A{% endif %}
                         </td>
-                        <td class="{% if student.period_6 %}present{% else %}absent{% endif %}">
+                        <td class="{% if student.attendance.period_6 %}present{% else %}absent{% endif %}">
                             {% if student.attendance.period_6 %}P{% else %}A{% endif %}
                         </td>
-                        <td class="{% if student.period_7 %}present{% else %}absent{% endif %}">
+                        <td class="{% if student.attendance.period_7 %}present{% else %}absent{% endif %}">
                             {% if student.attendance.period_7 %}P{% else %}A{% endif %}
                         </td>
-                        <td class="{% if student.period_8 %}present{% else %}absent{% endif %}">
+                        <td class="{% if student.attendance.period_8 %}present{% else %}absent{% endif %}">
                             {% if student.attendance.period_8 %}P{% else %}A{% endif %}
                         </td>
                         
