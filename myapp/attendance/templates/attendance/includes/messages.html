@@ -1,5 +1,5 @@
 {% if messages %}
-<div class="modal fade show" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true" style="display: block;">
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
             {% for message in messages %}
@@ -37,7 +37,10 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var messageModal = new bootstrap.Modal(document.getElementById("messageModal"));
+        var messageModal = new bootstrap.Modal(document.getElementById("messageModal"), {
+            backdrop: 'static',
+            keyboard: false
+        });
         messageModal.show();
     });
 </script>

@@ -218,7 +218,7 @@ def take_attendance(request):
 
     cap.release()
     cv2.destroyAllWindows()
-    messages.success(request,"Attendance has been taken successfully.")
+    # messages.success(request,"Attendance has been taken successfully.")
     return redirect(reverse("attendance:showattendance"))
 
 @login_required(login_url=reverse_lazy('attendance:login'))

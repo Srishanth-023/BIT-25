@@ -66,18 +66,18 @@
     </style>
 </head>
 <body>
-
+    {% comment %} {% include "attendance/includes/messages.html" %} {% endcomment %}
     <!-- Title at the top -->
     <div class="header-container">
         Attendance Tracking System
     </div>
-    {% include "attendance/includes/messages.html" %}
+    
     <!-- Transparent Background Box -->
     <div class="container-bg">
         
         <!-- Date and Class details -->
         <div class="info-container">
-            <div>Date: <span id="currentDate"></span></div>
+            <div>Date: <span id="currentDate">{{today}}</span></div>
             <div>Class: {{classname}}</div>
         </div>
         
@@ -110,7 +110,7 @@
                         <td>{{ student.roll_no }}</td>
 
                         <td class="{% if student.attendance.period_1 %}present{% else %}absent{% endif %}">
-                            {% if student.attedance.period_1 %}P{% else %}A{% endif %}
+                            {% if student.attendance.period_1 %}P{% else %}A{% endif %}
                         </td>
                         <td class="{% if student.attendance.period_2 %}present{% else %}absent{% endif %}">
                             {% if student.attendance.period_2 %}P{% else %}A{% endif %}
@@ -139,13 +139,10 @@
                 </tbody>
             </table>
         </div>
-
+        
     </div>
-
-    <script>
-        // Display current date
-        document.getElementById("currentDate").innerText = new Date().toLocaleDateString();
-    </script>
+    
+    
 
 </body>
 </html>
