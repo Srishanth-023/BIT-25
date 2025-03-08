@@ -11,9 +11,10 @@ import random
 import io
 from PIL import Image, ImageEnhance, ImageFilter
 from django.core.files.base import ContentFile
+from datetime import date
+
 import cv2
 import face_recognition
-import os
 import numpy as np
 import mediapipe as mp
 import torch
@@ -50,21 +51,20 @@ def add_student(request):
     image_form = StudentImageForm()
     if request.method == 'POST':
         student_form = StudentForm(request.POST)
-        image_form = StudentImageForm(request.POST,request.FILES)
+        image_form = StudentImageForm(request.POST, request.FILES)
 
         if student_form.is_valid():
-
             student = student_form.save(commit=False)
-            cls = Class.objects.get(incharge = request.user.id)
-            print("Here",cls)
+            cls = Class.objects.get(incharge=request.user.id)
+            
             student.assigned_class = cls
             student.save()
-        
+
             if image_form.is_valid():
                 image = image_form.cleaned_data['image']
                 original_image = Image.open(image).convert("RGB")
 
-                for i in range(100):
+                for i in range(10):
                     transformed_image = original_image.copy()
                     transformations = [
                         lambda img: img.rotate(random.randint(-180, 180)),
@@ -88,11 +88,11 @@ def add_student(request):
                     transformed_image.save(img_io, format="JPEG")
                     img_io.seek(0)
 
-                    StudentImage.objects.create(student=student,image=ContentFile(img_io.getvalue(), name=f"{student.name}_{i+1}.jpg")
-                    )
+                    StudentImage.objects.create(student=student, image=ContentFile(img_io.getvalue(), name=f"{student.name}_{i+1}.jpg"))
 
-                print(f"Saved 100 distorted images for {student.name}")
-    return render(request,'attendance/addstudent.html',{'title':'Add student','student_form':student_form,'image_form':image_form}) 
+                print(f"Saved 10 distorted images for {student.name}")
+    return render(request, 'attendance/addstudent.html', {'title': 'Add student', 'student_form': student_form, 'image_form': image_form})
+
 
 
 def new_class(request):
@@ -123,26 +123,28 @@ def take_attendance(request):
         transforms.Resize((384, 384)),
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
-
+    
     students = Student.objects.filter(assigned_class__incharge=request.user)
     student_images = StudentImage.objects.filter(student__in=students)
     
     known_face_encodings = []
     known_face_names = []
-
     for student_image in student_images:
+        
         try:
-            image = face_recognition.load_image_file(student_image.image.path)
+            image = face_recognition.load_image_file(student_image.image)
             encoding = face_recognition.face_encodings(image, model="hog", num_jitters=10)
+            
+            
             if encoding:
                 known_face_encodings.append(encoding[0])
                 known_face_names.append(student_image.student.name)
-        except Exception:
-            pass
+        except Exception as e:
+            print("ERROR:",e)
 
     if not known_face_encodings:
         return HttpResponse("No student face data found. Please add student images.", status=400)
-
+    print("Get ready focks")
     cap = cv2.VideoCapture(0)
     frame_count = 0
 
@@ -198,3 +200,12 @@ def take_attendance(request):
     cv2.destroyAllWindows()
     return redirect(reverse("attendance:index"))
 
+
+def show_attendance(request):
+    students = Student.objects.filter(assigned_class__incharge=request.user)
+    today = date.today()
+    attended_students = Attendance.objects.filter(student__assigned_class__incharge=request.user)
+    
+    for student in students:
+        student.attendance = Attendance.objects.filter(student=student, date=today).first()
+    return render(request,'attendance/showattendance.html',{"students":students,'date':today,'attended_students':attended_students})

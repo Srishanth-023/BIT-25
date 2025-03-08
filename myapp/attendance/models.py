@@ -50,3 +50,13 @@ class StudentImage(models.Model):
 
     def __str__(self):
         return f"Image of {self.student.name}"
+    
+    @property
+    def formeted_image(self):
+
+        if self.image.__str__().startswith(('http://','https://')):
+            url = self.image
+        else:
+            url = self.image.url
+            
+        return url
