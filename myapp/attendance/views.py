@@ -157,7 +157,7 @@ def take_attendance(request):
 
     if not known_face_encodings:
         return HttpResponse("No student face data found. Please add student images.", status=400)
-    print("Get ready focks")
+    print("Get ready...")
     cap = cv2.VideoCapture(0)
     frame_count = 0
 
@@ -200,11 +200,11 @@ def take_attendance(request):
                     attendance.period_4 = True
                 elif datetime.strptime("13:25", "%H:%M").time() <= current_time <= datetime.strptime("14:10", "%H:%M").time():
                     attendance.period_5 = True
-                elif datetime.strptime("14:10", "%H:%M").time() <= current_time <= datetime.strptime("14:55", "%H:%M").time():
+                elif datetime.strptime("14:10", "%H:%M").time() <= current_time <= datetime.strptime("15:10", "%H:%M").time():
                     attendance.period_6 = True
                 elif datetime.strptime("15:10", "%H:%M").time() <= current_time <= datetime.strptime("15:50", "%H:%M").time():
                     attendance.period_7 = True
-                else:
+                elif datetime.strptime("15:50", "%H:%M").time() <= current_time <= datetime.strptime("16:30", "%H:%M").time():
                     attendance.period_8 = True
 
                 attendance.save()

@@ -8,12 +8,17 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
+                
                 <li class="nav-item me-3">
                     <a class="nav-link btn-glow px-4 py-2" href="{% url "attendance:index" %}">Home</a>
                 </li>
                 <li class="nav-item me-3">
+                    <a class="nav-link btn-glow px-4 py-2" href="{% url "attendance:showattendance" %}">View Attendance</a>
+                </li>
+                <li class="nav-item me-3">
                     <a class="nav-link btn-glow px-4 py-2" href="{% url "attendance:logout" %}">Logout</a>
                 </li>
+
                 {% if request.user.is_superuser %}
                 <li class="nav-item">
                     <a class="nav-link btn-glow px-4 py-2" href="{% url "attendance:addclass" %}">Add Class</a>
