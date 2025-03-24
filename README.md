@@ -20,8 +20,9 @@ TEAM MEMBERS:
 
     3. Dlib from the .whl file from the link given below.
       https://github.com/z-mahmud22/Dlib_Windows_Python3.x
+      Download according to the version of Python you use.
 
-    4. Run the project using 'python runserver manage.py'
+    4. Run the project using 'python manage.py runserver'
 
     5. You must have database dependencies installed according to the project configuration.
       (PREFERENCE : Use MySQL)
