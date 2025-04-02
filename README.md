@@ -3,7 +3,7 @@
 PROBLEM STATEMENT:
   **Build an AI-based face recognition system to automate attendance using a webcam or smartphone.**
 
-_TEAM MEMBERS:_
+TEAM MEMBERS:
   1. Nandhana G
   2. Rithika R
   3. Deepak K M
